@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <input type="radio" value="a" v-model="picked">A<br>
+    <input type="radio" value="b" v-model="picked">B<br>
+    <input type="text" v-model="msg1">
+    <input type="text" v-model.lazy="msg2">
+    {{picked}}----{{msg1}}----{{msg2}}<br>
+    age: <input type="text" v-model="age">
+    age: <input type="text" v-model.number="age2">
+    <button @click="conType">Type</button>
+  </div>
+
+  <hr>
+  
+
+  <ul>
+    <li>
+        默认情况下，v-model在每次input事件触发的时候，将view和model的数据进行同步。
+        但是可以添加lazy修饰符，从而转变为change事件进行同步。
+    </li>
+    <li>
+      数据绑定的时候，即使输入的是数字，从view到model也是会成为字符串。
+      需要加入.number修饰符。
+    </li>
+    <li>
+      .trim可以过滤收尾的空白符
+    </li>
+  </ul>
+  <script>
+    var vm=new Vue({
+      el:'#app',
+      data:{
+        picked:'b',
+        msg1:'yuqi',
+        msg2:'yujie',
+        age:19,
+        age2:19
+      },
+      methods: {
+        conType(){
+          console.log(typeof(this.age),console.log(typeof(this.age2)))
+        }
+      }
+    })
+  </script>
+</body>
+</html>

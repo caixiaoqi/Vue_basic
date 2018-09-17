@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+</head>
+<body>
+    <p>
+        数据量很大的时候，需要缓存的时候用computed。需要每次都重新加载，不需要缓存的时候使用methods
+    </p>
+    <hr>
+  <h2>watch和computed的区别</h2>
+  <ul>
+    <li>
+      共同点：
+        <p>
+            watch和computed都想做一样的事情，都是基于以Vue的追踪机制为基础的，
+            他们都试图当某一个数据发生变化的时候，所有依赖这个数据的“相关”数据都会
+            “自动”发生变化
+        </p>
+    </li>
+    <li>
+      应用场景的不同点：
+      <ul>
+        <li>computed：适用于这个数据受多个数据影响</li>
+        <li>watch：适用于这个数据影响多个数据</li>
+        <li>methods：不处理逻辑关系，只提供可调用的函数</li>
+      </ul>
+    </li>
+    <li>
+      响应行为的不同点：
+      <ul>
+        <li>为了提高效率，watch是通过观察字面量实现的，这导致了watch对象的时候无法检测属性的变化，
+          也就是说想这个对象里面添加属性、改变已有属性、删除属性都是不会触发watch的</li>
+        <li>解决这个问题：向watch中添加deep为true(或者直接监听对象的属性)。
+          添加之后，他只监控这个对象已有的属性，只有已有的属性变化之后会触发watch，
+          向这个对象里面添加属性、删除已有属性、删除添加的属性是不会触发watch的
+        </li>
+        <li>为了提高性能，computed实际上如果没有用到，是不会计算的</li>
+        <li>很奇怪的是：computed可以监听对象的原有属性，原有属性变化了之后，
+            computed的属性也变，但是不会触发computed事件。除此之外，向这个
+            对象中添加属性不会触发computed。
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+
+  <h3>当一个数据变化之后，先触发watch---computed---event</h3>
+
+
+  <div id="app1">
+    <span>watch</span>
+    <div>{{msg}}</div>
+  </div>
+<hr>
+  <div id="app2">
+    <span>computed</span>
+    <div>{{compu}}</div>
+  </div>
+
+
+  <script>
+    var vm1=new Vue({
+      el:'#app1',
+      data:{
+        msg:{
+          a:1
+        }
+      },
+      watch: {
+        // msg:function(newValue,oldValue){
+        //  alert('msg变化了')
+        // },
+        msg:{
+          handler(newValue,oldValue){
+            alert(newValue)
+          },
+          deep:true
+        },
+        // 'msg.a':function(){
+        //   console.log('sadsada')
+        // }
+      }
+    })
+
+
+
+    var vm2=new Vue({
+      el:"#app2",
+      data:{
+        msg:{
+          item:1
+        }
+      },
+      computed: {
+        compu:function(){
+          console.log('computed 触发');
+          return this.msg;
+        }
+      }
+    })
+
+    
+  </script>
+ 
+</body>
+</html>

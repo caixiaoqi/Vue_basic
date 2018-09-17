@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  
+  <div id="app">
+    <template v-if="loginName">
+      <label>UserName</label>
+      <input type="text">
+    </template>
+    <template v-else>
+      <label>Email</label>
+      <input type="text">
+    </template>
+    <div><button @click="clickHandler">ChangeType</button></div>
+  </div>
+
+  <hr>
+  <hr>
+  <p>Vue会尽量的复用已有的元素，而不是从又开始渲染，如果你不想复用他们，可以设置一个唯一的key属性</p>
+  <h3>v-if和v-show的区别</h3>
+  <ul>
+    <li>v-if是真正的条件渲染，它会确保切换过程中的事件监听器和子组件适当地销毁和重建</li>
+    <li>v-if也是惰性的，如果一直为假的话，它一次也不会渲染</li>
+    <li>v-show很单纯，不管初始条件是什么，它是一定会渲染，而且只是简单的设置css的display</li>
+  </ul>
+
+  <p>
+      v-if有更高的切换开销，v-show有更高的初始渲染开销。所以，如果频繁切换使用v-show；
+      如果运行时条件很少切换，甚至有可能不渲染，使用v-if
+  </p>
+
+  <script>
+    var vm=new Vue({
+      el:'#app',
+      data:{
+        loginName:true
+      },
+      methods: {
+        clickHandler(){
+          this.loginName=!this.loginName
+        }
+      }
+    })  
+  </script>
+</body>
+</html>

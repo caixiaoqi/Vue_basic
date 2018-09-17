@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <title>Document</title>
+  <style>
+    span{
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="app">
+    <input type="text" v-model="msg">-----{{msg}}
+  </div>
+
+  <h3>Vue属于MVVM模型的</h3>
+  <h4>
+    MV*的目的是把应用程序的数据、业务逻辑和界面这三块解耦，分离关注点，
+    不仅利于团队协作和测试，更有利于甩锅维护和管理
+  </h4>
+  <ul>
+    <li>M-model，model层用于封装和业务逻辑相关的<span>数据以及数据的处理方法</span></li>   
+    <li>V-view,就是视图层，主要负责数据的展示</li>
+    <li>
+      有了Model和View，可以完成模型层到视图层的逻辑，
+      就是视图层的数据来源于模型图。
+      但是远远不够，它还需要响应用户的操作，同步View和Model。
+    </li> 
+    <li>
+      C-controller，用户对View的操作交给了Controller处理，在controller中响应
+      View的事件，然后调用Model的接口对数据进行操作，一旦Model发生改变便通知相关视图进行更新。
+    </li>  
+  </ul>
+  <hr>
+  <ul>
+    <li>使用观察者模式，View事先在Model上注册，Model中数据一旦发生变化们应该通知所有的视图</li>
+    <li>
+      Cntroller作为Model和View的纽带，MVC将响应机制封装在controller中。
+      当用户和你的应用产生交互时，控制器中的事件触发器就发生改变了
+    </li>
+    <li>
+      Vue专注于View。它的核心是MVVM中的VM，也就是ViewModel。ViewModel负责连接
+      View和Model，保证视图和数据的一致性。
+    </li>
+  </ul>
+<hr>
+  <p>
+    Vue实际上是使用<span>Object.defineProperty</span>来劫持数据中的各个属性的getter和setter，
+    在数据变化的时候使用<span>发布者--订阅者</span>模式来通知订阅者。
+  </p>
+  <ol type="1">
+    <li>
+      实现一个Observer数据监听器，能够对数据对象的每个数据进行监听，
+      如有变动可拿到最新值并通知订阅者。
+    </li>
+    <li>
+      实现一个指令解析器Complier，对每个元素的节点进行扫描和解析，根据
+      模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图。并将每个
+      指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到
+      通知，更新视图。
+    </li>
+    <li>
+      实现一个Watcher，作为连接Observer和Complier的桥梁，能够订阅并
+      收到每个属性变动的通知，执行指令绑定的回调函数，从而更新视图
+    </li>
+    <li>
+      mvvm入口函数，整合以上三者
+    </li>
+  </ol>
+
+
+
+
+
+  <script>
+  //   var vm=new Vue({
+  //     el:'#app',
+  //     data:{
+  //       msg:'hello'
+  //     }
+  //   })
+
+
+  //   var myapp={};
+  // myapp.Model=function(){
+  //   var val=0;    //需要操作的数据
+  //   // 操作数据的方法
+  //   this.add=function(v){
+  //     if(val<100) val+=v;
+  //   };
+  //   this.sub=function(v){
+  //     if(val>0) val-=v;
+  //   }
+  //   this.getVal=function(){
+  //     return val;
+  //   }
+  //   // 观察者模式
+  //   var self=this,views=[];
+
+  //   this.register=function(view){
+  //     biew.push(view);
+  //   }
+  //   this.notify=function(){
+  //     for(var i=0;i<views.length;i++){
+  //       views[i].render(self);
+  //     }
+  //   }
+  // }
+
+
+  // myapp.View=function(){
+  //   // 视图元素
+  //   var $num=$('#num'),$incBtn=$('#increase'),$decBtn=$('decrease');
+  //   // 渲染数据
+  //   this.render=function(model){
+  //     $num.text(model.getVal());
+  //   }
+  //   // 绑定事件
+  //   $incBtn.click(controller.increase);
+  //   $decBtn.click(controller.decrease);
+  // }
+
+  // myapp.controller=function(){
+  //   var model=null;
+  //   var view=null;
+  //   this.init=function(){
+  //     // 初始化model和view
+  //     model=new myapp.model();
+  //     view=new myapp.view(this);
+  //     model.register(view);
+  //     model.notify();
+  //   }
+
+  //   this.increase=function(){
+  //     model.add(1);
+  //     model.notify();
+  //   }
+
+  //   this.decrease=function(){
+  //     model.sub(1);
+  //     model.notify();
+  //   }
+  // }
+
+
+
+    var data={
+      name:'observer'
+    }
+    observer(data);
+    data.name='observer-';
+    
+    function observer(data){
+      if(!data||typeof(data)!='object'){
+        return ;
+      }
+      //去除所有属性遍历
+      Object.keys(data).forEach(function(key){
+       defineReactive(data,key,data[key])
+      })
+    }
+
+
+    function defineReactive(data,key,val){
+      observer(val);    //监听子属性
+
+      var dep=new Dep();  //每一个属性都应该有自己的订阅器
+
+      Object.defineProperty(data,key,{
+        enumerable:true,
+        configurable:true,
+        get:function(){
+          //由于需要在闭包中添加target，所以通过Dep定义一个全局target属性
+          Dep.target&&dep.addDep(Dep.target);
+          return val;
+        },
+        set:function(newValue){
+          console.log('value is change');
+          value=newValue;
+          dep.notify();   //通知所有的订阅者
+        }
+      })
+    }
+
+    function Dep(){
+      this.subs=[];
+    }
+    Dep.prototype={
+      addSub(sub){
+        this.subs.push(sub);
+      },
+      notify(){
+        this.subs.forEach(function(sub){
+          sub.update();
+        })
+      }
+    }
+
+  //现在observer还要能通知所有的订阅者能够改变。
+  // 所以要实现一个消息订阅器，维护一个数组，用来收集订阅者。
+  // 数据变动就触发notify，再调用订阅者的update方法。
+
+  Watcher.prototype={
+    
+  }
+
+
+  Compiler.prototype={
+    complierElement:function(el){
+      var childNodes=el.childNodes,me=this;
+      [].slice.call(childNodes).forEach(node=>{
+        var text=node.textContent;
+        var reg=/\{\{(.*)\}\}/;
+        if(me.isElementNode(node)){
+          me.compiler(node);
+        }
+        else if(me.isTextNode(node)&&reg.test(text)){
+          me.complierText(node,RegExp.$1);
+        }
+      })
+    }
+  }
+  </script>
+</body>
+</html>

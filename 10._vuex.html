@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <title>Document</title>
+  <style>
+    span{
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h2>Vuex</h2>
+  <h4>主要是用于状态管理的，其实就是一个数据仓库。</h4>
+  <h4>如果多个组件共享状态的时候，怎么办呢？</h4>
+  <ul>
+    <li>多个视图依赖同一个状态</li>
+    <li>来自不同视图的行为需要变更同一状态</li>
+  </ul>
+  <ol>
+    <li>
+      对于多个视图共享一个状态，对于多重嵌套的的组件会非常麻烦。
+    </li>
+    <li>
+      对于问题二，我们经常采用父子组件的直接引用($parent,$refs)或者通过事件来变更和同步状态的多份拷贝。
+    </li>
+  </ol>
+  <hr>
+  <h4>以上这些都非常麻烦，为什么不把组件共享的状态抽取出来，以一个<span>全局单例模式</span>管理呢？</h4>
+  <ul>
+    <li>
+      由于store中的状态都是响应式的，在组件中调用store中的状态一般都是在计算属性中直接返回。
+    </li>
+  </ul>
+  <hr>
+  <h2>兄弟组件之间的通信</h2>
+  <ul>
+    <li>先子传父，再父传子</li>
+    <li>
+      借用中央事件线程
+      <ol>
+        <li>建立一个中央的时间线，其实就是一个Vue的实例，new Vue（）</li>
+        <li>然后要通信的兄弟组件引用它们，要发送信息的bus.$emit(),接收信息的bus.$on()</li>
+      </ol>
+    </li>
+  </ul>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <title>Document</title>
+  <style>
+    span{
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h2>Mixins是一种分发Vue组件中可复用功能的非常灵活的方式</h2>
+  <ul>
+    <li>混入对象可以包含任意组件选项。</li>
+    <li>当组件使用混入对象时，所有混入对象的选项将被混入该组件自身的选项</li>
+  </ul>
+  <ol>
+    <li>
+      当混入的时候，同名的钩子函数都会存在，且都会调用。但是<span>先调用mixin的，再调用组件内部的</span>
+      顺序为<span>extend > mixins > self</span>
+    </li>
+    <li>
+      methods、commponents当两个键名冲突时，取组件自身的。
+    </li>
+  </ol>
+  <h3>好处</h3>
+  <ol>
+    <li>可以实现代码复用，减少代码量</li>
+    <li></li>
+  </ol>
+
+  <hr>
+  <div id="app">
+    {{num}}<br>
+    <button @click="add">++++</button>
+  </div>
+
+  <script>
+    var mixins={
+      updated(){
+        console.log('mixins');
+      },
+      data(){
+        return{
+          name:'mixins name'
+        }
+      }
+    }
+    var extend={
+      data(){
+        return {
+          name:'extend name'
+        }
+      },
+      updated(){
+        console.log('extend')
+      }
+    }
+    var vm=new Vue({
+      el:'#app',
+      data:{
+        num:0,
+        name:'self name'
+      },
+      methods: {
+        add(){
+          this.num++;
+          console.log('dassadada',this.name);
+        }
+      },
+      updated () {
+        console.log('self');
+      },
+      extends:extend,
+      mixins:[mixins]
+    })
+
+    //mixins  self
+    // 说明混入的方法先执行，然后执行自身的
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <ul v-for="(item,index) in items" :key="index">
+      <li>{{index}}----{{item}}</li>
+    </ul>
+  </div>
+  <hr>
+
+  <p>
+    但是，只是当数组发生调用变异方法的时候，视图才会发生改变
+  </p>
+  <ul>
+    <li>pop</li>
+    <li>push</li>
+    <li>shift</li>
+    <li>unshift</li>
+    <li>splice</li>
+    <li>sort</li>
+    <li>reverse</li>
+  </ul>
+  <p>
+    当使用其他数组的非变异方法的时候，一级通过数组索引改变数组的时候，a[18]=77，a.length=5;
+    这时候，视图是不会发生改变的。
+  </p>
+  <p>
+    解决上述问题，可以使用vm.$set()或者变相使用变异方法,vm.$set(vm.item,index,value);
+  </p>
+  <hr>
+  <p>
+    应该尽量在在使用v-for的时候提供唯一的key。现在vue2.2以上版本，都必须提供key，key主要是为了追踪每个节点的身份。
+  </p>
+  <script>
+    var vm=new Vue({
+      el:'#app',
+      data:{
+        items:[0,1,2,3,4,5,6,7]
+      }
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <p>Vue其实可以监控对象里面的属性，然后渲染到视图</p>
+  <p>这是因为Vue在初始化对象的时候，递归遍历了每一个属性，在属性的setter里面出发了事件</p>
+  <h3>但是Vue不能监听对象中新添加的属性</h3>
+  <p>这是因为Vue在初始化对象后如法手动添加属性设置setter</p>
+  <ul>
+    <li>解决办法是：</li>
+    <li>$set()方法对一个对象添加属性的同时，注册了setter</li>
+  </ul>
+
+
+<hr>
+  <div id="app">
+    {{msg}}
+    <div><button @click="setTest">Set</button></div>
+  </div>
+<hr>
+<p>
+  数组中的元素发生变化之后，不会立刻更新视图，除非是pop、push、splice等改变数组的方法。
+</p>
+  <div id="app2">
+    <ul v-for="item in items">
+      <li>{{item}}</li>
+    </ul>
+    <button>Change</button>
+  </div>
+
+
+  <script>
+    var vm=new Vue({
+      el:'#app',
+      data:{
+        msg:{
+          a:{
+            a:1
+          }
+        }
+      },
+      methods: {
+        setTest(){
+          this.$set(this.msg.a,'b',798)
+          this.$set(this.msg,'b',798)
+        }
+      }
+    })
+
+    var vm2=new Vue({
+      el:'#app2',
+      data:{
+        items:[1,2,3,4,5,6]
+      },
+      methods:{
+        changeHandler(){
+          this.items[0]=100;
+        }
+      }
+    })
+  </script>
+</body>
+</html>

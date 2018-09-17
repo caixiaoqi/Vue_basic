@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <div id="el">
+    <div>原始---{{msg}}</div>
+    <div>表达式---{{msg.split("").reverse().join("")}}</div>
+    <div>使用方法reverseMsg()---{{reverseMsg2()}}--method要加括号运行</div>
+    <div>computed---{{reverseMsg}}---计算属性不需要加括号运行</div>
+  </div>
+  <hr>
+  <h3>对于任何复杂逻辑，都应该使用计算属性</h3>
+  <p>
+    使用method和computed都是可以达到效果，但是不同的是效率。
+  </p>
+  <p>
+    计算属性是基于他们的依赖进行缓存的，只有相关依赖发生变化的时候才会重新求值。
+  </p>
+  <p>
+    这就意味着，只要msg没有发生变化，多次访问computed的reverseMsg不会进行计算，
+    而是读取之前缓存的计算值，不必再次执行函数。
+  </p>
+  <script>
+    var vm=new Vue({
+      el:'#el',
+      data:{
+        msg:'hello world!'
+      },
+      methods: {
+        reverseMsg2(){
+          return this.msg.split("").reverse().join("")
+        }
+      },
+      computed: {
+        reverseMsg:function(){
+          return this.msg.split("").reverse().join("")
+        }
+      }
+    })
+  </script>
+</body>
+</html>

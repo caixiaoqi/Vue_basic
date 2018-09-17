@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <div id="app1">
+    <button @click="add">Add 1</button>
+    <p>The button above has been clicked {{counter}} times.</p>
+  </div>
+  <hr>
+  <h2>不需要传递事件对象</h2>
+  <div id="app2">
+    <button @click="sayMsg('Hi')">Hi</button><br>
+    <button @click="sayMsg('Hello')">Hello</button>
+  </div>
+  <hr>
+  <h2>如果需要传递事件对象，用$event传递</h2>
+  <div id="app3">
+    <button @click="sayEvent($event)">sayEvent</button>
+  </div>
+  <hr>
+  <h2>修饰符</h2>
+  <ul>
+    <li>.stop---不冒泡</li>
+    <li>.prevent----取消默认操作</li>
+    <li>.capture---使用事件捕获</li>
+    <li>.once---事件只触发一次，以后不再触发</li>
+    <li>.self---只有当event.target是当前元素自身的时候才触发函数</li>
+    <li>.passive---该事件的默认行为立刻触发，如a；与prevent一起使用的时候，.prevent会被忽略</li>
+  </ul>
+  <h6>使用修饰符的时候，顺序很重要。</h6>
+  <hr>
+  <div id="app4">
+    <button @click="clickHandler">Click-NO</button>
+    <button @click.once="clickHandler">Click-once</button>
+    <a href="http://www.baidu.com" @click.passive="clickHandler">百度</a>
+    <a href="http://www.baidu.com" @click.prevent="clickHandler">百度</a>
+  </div>
+  <hr>
+
+  <p style="margin:0 60px;">
+    .native主要用于在组件上触发原生的事件。一个组件上如果不触发自定义事件。
+    <span>自定义组件上只能触发自定义的事件。</span>如果定义一个原生的事件，你是触发不了的。
+
+  </p>
+
+  <script>
+    var vm1= new Vue({
+      el:'#app1',
+      data:{
+        counter:1
+      },
+      methods: {
+        add(){
+          this.counter++;
+        }
+      }
+    })
+
+    var vm2=new Vue({
+      el:'#app2',
+      methods:{
+        sayMsg(message){
+          alert(message);
+        }
+      }
+    })
+
+    var vm3=new Vue({
+      el:'#app3',
+      methods:{
+        sayEvent(event){
+          alert(event)
+        }
+      }
+    })
+    
+
+    var vm4=new Vue({
+      el:'#app4',
+      data:{
+
+      },
+      methods:{
+        clickHandler(){
+          alert('。。。。。。')
+        }
+      }
+    })
+  </script>
+</body>
+</html>
